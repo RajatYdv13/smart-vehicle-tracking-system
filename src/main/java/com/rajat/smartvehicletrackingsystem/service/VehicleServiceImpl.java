@@ -48,4 +48,17 @@ public class VehicleServiceImpl implements VehicleService{
     public void deleteVehicleById(Long id) {
         vehicleRepository.deleteById(id);
     }
+    @Override
+    public List<Vehicle> getVehiclesByStatus(String status) {
+        return vehicleRepository.findByStatus(status);
+    }
+    @Override
+    public List<Vehicle> getVehiclesByOwnerName(String ownerName) {
+        return vehicleRepository.findAllByOwnerName(ownerName);
+    }
+    @Override
+    public Vehicle getVehicleByVehicleNumber(String vehicleNumber) {
+        return vehicleRepository.findByVehicleNumber(vehicleNumber)
+                .orElse(null);
+    }
 }
