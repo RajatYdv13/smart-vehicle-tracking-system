@@ -2,11 +2,10 @@ package com.rajat.smartvehicletrackingsystem.controller;
 
 import com.rajat.smartvehicletrackingsystem.entity.Vehicle;
 import com.rajat.smartvehicletrackingsystem.service.VehicleService;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import com.rajat.smartvehicletrackingsystem.dto.VehicleDto;
 import jakarta.validation.Valid;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicles")
@@ -31,8 +30,12 @@ public class VehicleController {
         return vehicleService.saveVehicle(vehicle);
     }
     @GetMapping
-    public List<Vehicle> getAllVehicles() {
-        return vehicleService.getAllVehicles();
+    public Page<Vehicle> getAllVehicles(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+        return  vehicleService.getAllVehicles(page, size, sortBy, sortDir);
     }
     @GetMapping("/{id}")
     public Vehicle getVehicleById(@PathVariable Long id) {
@@ -40,7 +43,7 @@ public class VehicleController {
     }
     @PutMapping("/{id}")
     public Vehicle updateVehicle(@PathVariable Long id,
-                                 @RequestBody Vehicle vehicle) {
+                                @Valid @RequestBody Vehicle vehicle) {
         return vehicleService.updateVehicle(id, vehicle);
     }
     @DeleteMapping("/{id}")
@@ -49,12 +52,21 @@ public class VehicleController {
         return "Vehicle deleted successfully!";
     }
     @GetMapping("/status/{status}")
-    public List<Vehicle> getVehiclesByStatus(@PathVariable String status) {
-        return vehicleService.getVehiclesByStatus(status);
+    public Page<Vehicle> getVehiclesByStatus(@PathVariable String status,
+                                             @RequestParam(defaultValue = "0")  int page,
+                                             @RequestParam(defaultValue = "5") int size,
+                                             @RequestParam(defaultValue = "id")  String sortBy,
+                                             @RequestParam(defaultValue = "asc") String sortDir) {
+        return  vehicleService.getVehiclesByStatus(status, page, size, sortBy, sortDir);
     }
+
     @GetMapping("/owner/{ownerName}")
-    public List<Vehicle> getVehiclesByOwnerName(@PathVariable String ownerName) {
-        return vehicleService.getVehiclesByOwnerName(ownerName);
+    public Page<Vehicle> getVehiclesByOwnerName(@PathVariable String ownerName,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "5") int size,
+                                                @RequestParam(defaultValue = "id") String sortBy,
+                                                @RequestParam(defaultValue = "asc") String sortDir) {
+        return vehicleService.getVehiclesByOwnerName(ownerName, page, size, sortBy, sortDir);
     }
     @GetMapping("/number/{vehicleNumber}")
     public Vehicle getVehicleByVehicleNumber(@PathVariable String vehicleNumber) {
